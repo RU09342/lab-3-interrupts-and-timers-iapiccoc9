@@ -1,12 +1,11 @@
-# Button Based Delay
-Now that you have begun to familiarize yourself with the TIMER modules, why don't we make an interesting change to our code from the last lab.
+# Functionality
+This code works by running an LED at 10 HZ. The user can then press an button down and the time the button was pressed is now the new time the button will be on when it toggles. This works by setting up the timer to up-mode, with the SMCLK/8. The CCR0 register was initialized to 12500 for 10HZ. The timer then blinks continuously. When the button is pressed it goes into an ISR for the port. There are two sections to the Port ISR. One when the button is pressed, and one for when the button is released. The edge detect is initially set to falling edge to detect when the button is pressed. Therefore the "button oressed" section of the ISR runs first. The edge detect is toggled to catch the rising edge or button release. The timer is cleared and set to conitnuous mode, and the flag is cleared. Then when the button is realeased it will go back into the service routine and service the "Button released section. In this part it will flip the edge detect back to falling edge. The timer is set back to up mode for correct LED toggling. The value of the timer is set to be the new CCR0 to set the new LED timing. And the flag is cleared. The button will then blink at the new rate given by the button until the button is pressed again.
 
-## Task
-Setup your microcontroller to initially blink and LED at a rate of 10Hz upon restarting or powering up. Then utilizing one of the buttons on board, a user should be able to set the delay or blinking rate of the LED by holding down a button. The duration in which the button is depressed should then become the new rate at which the LED blinks. As previously stated, you most likely will want to take advantage of the fact that TIMER modules exist and see if you can let them do a bulk of the work for you.
+# Difficulties
+The difficult parts of this project proved to be figuring out that the timer should be in continuous mode when trying the capture the button press timing. If it isn't, the timing can never be greater than the set value for CCR0, because if it the timer will have already rolled over. Putting the timer into continuous mode allows the new timing to be up to 0xffff, the full timer value.
 
-### Extra Work
-## Reset Button
-What is a piece of electronics without a reset button? Instead of relying on resetting your processor using the built in reset circuitry, why not instead use another button to reset the rate back to 10Hz.
+# Known errors
+The only known "error" is that this project could be done with the capture functionality of the timer. However this lab was completed before that functionality was known.
 
-## Button Based Hertz
-Most likely using two buttons, what if instead of making a delay loop based on the time, the user could instead enter a mode where the number of times they pressed the button would become the number in Hz of the blinking rate? How do you think you would implement that with just one button?
+# Differences between boards
+The only differences between boards were port names and timer names. Other than that the code was simply copied and pasted.
